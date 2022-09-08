@@ -14,3 +14,8 @@ export async function getQuestionById(questionId: number) {
   });
   return question;
 }
+
+export async function getQuestions() {
+  const questions: Question[] = await prisma.question.findMany();
+  return questions;
+}
