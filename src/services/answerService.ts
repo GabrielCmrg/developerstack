@@ -1,11 +1,11 @@
 import { Question, Answer } from "@prisma/client";
 
 import { IAnswerData } from "../types/answerTypes";
-import { getQuestionById } from '../repositories/questionRepository';
+import { getQuestionById, QuestionWithAnswers } from '../repositories/questionRepository';
 import { createAnswer, AnswerCreationType } from "../repositories/answerRepository";
 
 export async function addAnswerToQuestion(answer: IAnswerData, questionId: number) {
-  const questionToBeAnswered: Question | null = await getQuestionById(questionId);
+  const questionToBeAnswered: QuestionWithAnswers | null = await getQuestionById(questionId);
   if (questionToBeAnswered === null) {
     throw { type: 'not_found' };
   }

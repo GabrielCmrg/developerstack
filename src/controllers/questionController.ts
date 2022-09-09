@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
-import { Question } from '@prisma/client';
-import { Answer } from '@prisma/client';
+import { Question, Answer } from '@prisma/client';
 
-import { registerNewQuestion, getAllQuestions } from '../services/questionService';
+import {
+  registerNewQuestion,
+  getAllQuestions,
+  getQuestionWithAnswers
+} from '../services/questionService';
 import { addAnswerToQuestion } from '../services/answerService';
 import { IQuestionData } from '../types/questionTypes';
 import { IAnswerData } from '../types/answerTypes';
+import { QuestionWithAnswers } from '../repositories/questionRepository';
 
 export async function createQuestion(req: Request, res: Response) {
   const question: IQuestionData = req.body;
@@ -26,5 +30,7 @@ export async function get(req: Request, res: Response) {
 }
 
 export async function getById(req: Request, res: Response) {
-  // TODO
+  const questionId: number = Number(req.params.id);
+  const question: QuestionWithAnswers = await getQuestionWithAnswers(questionId);
+  return res.status(200).json(question);
 }

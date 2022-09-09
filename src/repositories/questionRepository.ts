@@ -1,7 +1,12 @@
 import { Question } from "@prisma/client";
 
 import { IQuestionData } from "../types/questionTypes";
+import { IAnswerData } from "../types/answerTypes";
 import { prisma } from "../config/database";
+
+export interface QuestionWithAnswers extends Question {
+  answers: IAnswerData[];
+}
 
 export async function createQuestion(question: IQuestionData) {
   const createdQuestion = await prisma.question.create({ data: question });
@@ -9,8 +14,16 @@ export async function createQuestion(question: IQuestionData) {
 }
 
 export async function getQuestionById(questionId: number) {
-  const question: Question | null = await prisma.question.findUnique({
-    where: { id: questionId }
+  const question: QuestionWithAnswers | null = await prisma.question.findUnique({
+    where: { id: questionId },
+    include: {
+      answers: {
+        select: {
+          answeredBy: true,
+          answer: true,
+        }
+      }
+    }
   });
   return question;
 }
